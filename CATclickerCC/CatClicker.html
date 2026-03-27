@@ -8,28 +8,92 @@
 
 </head>
 <body>
-
-    <div class="overlay"></div>
-
     <section>
         <div class="main">
-
+            <div id="event-display"></div>
             <div class="left">
-
-                <div class="top-nav">
-                    <img src="image-removebg-preview.png" alt="" class="profil">
-                    <p>CAT Clicker</p>
-                </div>
-
+                <h3>Cats: <span class="Cats-cost">0</span></h3>
+                <h4>CPS: <span class="cps-display">0</span></h4>
+                <img src="motion-cat-transparent.gif" alt="" class="Box-image" onclick="incrementCats(this)" draggable="false"  onclick="incrementCats(this)">
+                
+                
             </div>
-
-
-
             <div class="right">
 
+                <div class="upgrades" onclick="buyWorkerCat()">
+                    <div class="left-section">
+                        <img src="Arbetande katt med gul hjälm.png" alt="" class="upgarde-img">
+                    </div>
+                    <div class="mid-section">
+                        <h4>Worker cat</h4>
+                        <div class="cost-info">
+                            <p>Cost: <span class="clicker-cost">10</span> </p>
+                            <img src="motion-cat-transparent.gif" alt="" class="money-img">
+                        </div>
+                    </div>
+                    <div class="right-section">Level <span class="clicker-level">0</span></div>
+
+                    <div class="next-level-info">
+                        <p>
+                            +<span class="clicker-increase">1</span> Cat <br> per second
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="upgrades" onclick="buyPassiveCat()">
+
+                    <div class="left-section">
+                        <img src="Motioncat.png" class="upgarde-img">
+                    </div>
+
+                    <div class="mid-section">
+                        <h4>Motion cat</h4>
+
+                        <div class="cost-info">
+                            <p>Cost: <span class="cat-cost">130</span></p>
+                        </div>
+                    </div>
+
+                    <div class="right-section">
+                        Level <span class="cat-level">0</span>
+                    </div>
+
+                    <div class="next-level-info">
+                        <p>
+                            +<span class="cat-increase">1</span> Cat per second
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="upgrades" onclick="buyMouseHunter()">
+                    <div class="left-section">
+                        <img src="Cat with mouse in mouth.png" class="upgarde-img">
+                    </div>
+
+                    <div class="mid-section">
+                        <h4>Mouse Hunter Cat</h4>
+
+                        <div class="cost-info">
+                            <p>Cost: <span class="mouse-cost">25</span></p>
+                        </div>
+                    </div>
+
+                    <div class="right-section">
+                        Level <span class="mouse-level">0</span>
+                    </div>
+
+                    <div class="next-level-info">
+                        <p>
+                            +10% chance for bonus clicks
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-    
+ <script src="CatClicker.js"></script>
 </body>
 </html>
