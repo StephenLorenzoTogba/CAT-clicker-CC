@@ -231,75 +231,75 @@ const playlist = [
     "Big Brain Academy - Registration - LILjohno.mp3"
 ]
 
-let currentTrack = 0
+let currentTrack = -1
 
-function playMusic(index) {
-    music.src = playlist[index]
+function playRandomMusic() {
+    let newTrack
+
+    do {
+        newTrack = Math.floor(Math.random() * playlist.length)
+    } while (newTrack === currentTrack && playlist.length > 1)
+
+    currentTrack = newTrack
+
+    music.src = playlist[currentTrack]
     music.play()
 }
 
-
-function startGoldenCatEvent() {
-    let spawnDelay = Math.random() * 60000 + 30000; // 30–90 seconds
-
-    setTimeout(() => {
-        spawnGoldenCat();
-        startGoldenCatEvent(); // loop forever
-    }, spawnDelay);
-}
-
-function spawnGoldenCat() {
-    const cat = document.createElement("img");
-    cat.src = "golden-cat.png"; // your image
-    cat.classList.add("golden-cat");
-
-    document.body.appendChild(cat);
-
-    // random vertical position
-    cat.style.top = Math.random() * (window.innerHeight - 100) + "px";
-
-    let position = -150;
-    cat.style.left = position + "px";
-
-    let speed = 5 + Math.random() * 5;
-
-    let move = setInterval(() => {
-        position += speed;
-        cat.style.left = position + "px";
-
-        if (position > window.innerWidth) {
-            cat.remove();
-            clearInterval(move);
-        }
-    }, 16);
-
-    // click reward
-    cat.onclick = () => {
-        parsedCats += 500; // reward
-        Cats.innerHTML = parsedCats;
-
-        cat.remove();
-        clearInterval(move);
-    };
-}
-
-
-
-// when song ends → next song
+// when song ends → next random song
 music.addEventListener("ended", () => {
-    currentTrack++
-
-    if (currentTrack >= playlist.length) {
-        currentTrack = 0
-    }
-
-    playMusic(currentTrack)
+    playRandomMusic()
 })
 
-// start on first click (important)
+// start on first click
 document.body.addEventListener("click", () => {
-    playMusic(currentTrack)
+    playRandomMusic()
 }, { once: true })
 
 music.volume = 0.3
 
+
+// ===== GOLDEN CAT SPAWN =====
+function spawnGoldenCat() {
+    const cat = document.createElement("img")
+
+    cat.src = "Tabby cat with angelic wings.png" // make sure file exists
+    cat.classList.add("golden-cat")
+
+    document.body.appendChild(cat)
+
+    // random height
+    cat.style.position = "absolute"
+    cat.style.top = Math.random() * (window.innerHeight - 100) + "px"
+
+    let position = -150
+    cat.style.left = position + "px"
+
+    let speed = 6 + Math.random() * 5
+
+    let move = setInterval(() => {
+        position += speed
+        cat.style.left = position + "px"
+
+        if (position > window.innerWidth) {
+            cat.remove()
+            clearInterval(move)
+        }
+    }, 16)
+
+    // CLICK REWARD
+    cat.onclick = () => {
+        parsedCats += 500
+        updateDisplay()
+
+        cat.remove()
+        clearInterval(move)
+
+        console.log("Golden Cat clicked!")
+    }
+
+    console.log("Golden Cat spawned!")
+}
+
+
+startGoldenCatEvent()
