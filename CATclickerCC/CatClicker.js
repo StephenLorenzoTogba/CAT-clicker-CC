@@ -1,113 +1,56 @@
+// ===== ELEMENTS =====
 let Cats = document.querySelector('.Cats-cost')
-let workercatCost = document.querySelector('.clicker-cost')
 let cpsDisplay = document.querySelector('.cps-display')
-let critChance = 0.1; // 10%
-let critMultiplier = 2;
-let mouseCostEl = document.querySelector(".mouse-cost")
-let mouseLevelEl = document.querySelector(".mouse-level")
 
-let mouseCost = parseFloat(mouseCostEl.innerHTML)
-let mouseLevel = 0
+// ===== BASE VALUES =====
+let parsedCats = 0
+let gpc = 1
+let cps = 0
 
-let mouseChance = 0 // start 0%
+// ===== CRIT SYSTEM =====
+let critChance = 0.1
+let critMultiplier = 2
 
-// PASSIVE CAT (NY)
-let passiveCatCost = document.querySelector('.cat-cost')
-let passiveLevel = document.querySelector('.cat-level')
-let passiveIncrease = document.querySelector('.cat-increase')
-
-let parsedCats = parseFloat(Cats.innerHTML)
-
+// ===== WORKER CAT =====
+let workercatCost = document.querySelector('.clicker-cost')
 let clickerlevel = document.querySelector('.clicker-level')
 let clickerIncrease = document.querySelector('.clicker-increase')
 
 let parsedClickerIncrease = parseFloat(clickerIncrease.innerHTML)
 
-// PASSIVE VALUES
+// ===== PASSIVE CAT =====
+let passiveCatCost = document.querySelector('.cat-cost')
+let passiveLevel = document.querySelector('.cat-level')
+let passiveIncrease = document.querySelector('.cat-increase')
+
 let parsedPassiveIncrease = parseFloat(passiveIncrease.innerHTML)
 
-let gpc = 1
-let cps = 0   // 👈 passive income per second
+// ===== MOUSE HUNTER =====
+let mouseCostEl = document.querySelector(".mouse-cost")
+let mouseLevelEl = document.querySelector(".mouse-level")
 
+let mouseCost = parseFloat(mouseCostEl.innerHTML)
+let mouseLevel = 0
+let mouseChance = 0
 
-// ===== CLICK =====
-function incrementCats() {
-    Cats.innerHTML = Math.round(parsedCats += gpc)
-}
+// ===== KING CAT =====
+let kingCostEl = document.querySelector(".king-cost")
+let kingLevelEl = document.querySelector(".king-level")
 
+let kingCost = 500
+let kingLevel = 0
 
-// ===== WORKER CAT =====
-function buyWorkerCat() {
-    let parsedWorkerCatCost = parseFloat(workercatCost.innerHTML)
+// ===== GALAXY CAT =====
+let galaxyCostEl = document.querySelector(".galaxy-cost")
+let galaxyLevelEl = document.querySelector(".galaxy-level")
 
-    if (parsedCats >= parsedWorkerCatCost) {
-        parsedCats -= parsedWorkerCatCost
-        Cats.innerHTML = Math.round(parsedCats)
+let galaxyCost = 2000
+let galaxyLevel = 0
 
-        // level
-        let currentLevel = parseFloat(clickerlevel.innerHTML)
-        currentLevel += 1
-        clickerlevel.innerHTML = currentLevel
-
-        // increase
-        parsedClickerIncrease *= 1.03
-        clickerIncrease.innerHTML = parsedClickerIncrease.toFixed(2)
-
-        // gpc
-        gpc += parsedClickerIncrease
-
-        // cost increase
-        workercatCost.innerHTML = Math.floor(parsedWorkerCatCost * 1.15)
-    }
-}
-
-
-// ===== PASSIVE CAT (NY) =====
-function buyPassiveCat() {
-    let cost = parseFloat(passiveCatCost.innerHTML)
-
-    if (parsedCats >= cost) {
-        parsedCats -= cost
-        Cats.innerHTML = Math.round(parsedCats)
-
-        // level
-        let level = parseFloat(passiveLevel.innerHTML)
-        level += 1
-        passiveLevel.innerHTML = level
-
-        // increase
-        parsedPassiveIncrease *= 1.05
-        passiveIncrease.innerHTML = parsedPassiveIncrease.toFixed(2)
-
-        // cps (cats per second)
-        cps += parsedPassiveIncrease
-
-        // cost increase
-        passiveCatCost.innerHTML = Math.floor(cost * 1.2)
-    }
-}
-
-
-// ===== PASSIVE LOOP =====
-setInterval(() => {
-    parsedCats += cps
-    Cats.innerHTML = Math.round(parsedCats)
-}, 1000)
-
-
-// =====  cps =====
-cpsDisplay.innerHTML = cps.toFixed(2)
-setInterval(() => {
-    parsedCats += cps
-    Cats.innerHTML = Math.round(parsedCats)
-
-    cpsDisplay.innerHTML = cps.toFixed(2)
-}, 1000)
-
-
-
+// ===== CLICK SOUND =====
 let clickSound = new Audio("pop_7e9Is8L.mp3")
 
+// ===== CLICK =====
 function incrementCats(el) {
     let isCrit = Math.random() < critChance
 
@@ -118,15 +61,17 @@ function incrementCats(el) {
 
     let gain = gpc + mouseBonus
 
-    if (isCrit) gain = gain * critMultiplier
+    if (isCrit) gain *= critMultiplier
 
     parsedCats += gain
-    Cats.innerHTML = Math.round(parsedCats)
+    updateDisplay()
 
+    // animation
     el.classList.remove("click-pop")
     void el.offsetWidth
     el.classList.add("click-pop")
 
+    // sound
     clickSound.currentTime = 0
     clickSound.play()
 
@@ -134,6 +79,14 @@ function incrementCats(el) {
 
     if (isCrit) screenShake()
 }
+
+// ===== UPDATE DISPLAY =====
+function updateDisplay() {
+    Cats.innerHTML = Math.round(parsedCats)
+    cpsDisplay.innerHTML = cps.toFixed(2)
+}
+
+// ===== FLOATING TEXT =====
 function createFloatingNumber(amount, el, isCrit) {
     const float = document.createElement("div")
     float.className = "floating-number"
@@ -158,15 +111,13 @@ function createFloatingNumber(amount, el, isCrit) {
 
     setTimeout(() => float.remove(), 800)
 }
-console.log("floating spawned")
-float.style.background = "red"
 
-
+// ===== SCREEN SHAKE =====
 function screenShake() {
     const body = document.body
 
     body.classList.remove("screen-shake")
-    void body.offsetWidth // reset animation
+    void body.offsetWidth
     body.classList.add("screen-shake")
 
     setTimeout(() => {
@@ -174,53 +125,181 @@ function screenShake() {
     }, 250)
 }
 
+// ===== WORKER CAT =====
+function buyWorkerCat() {
+    let cost = parseFloat(workercatCost.innerHTML)
+
+    if (parsedCats >= cost) {
+        parsedCats -= cost
+
+        let level = parseFloat(clickerlevel.innerHTML) + 1
+        clickerlevel.innerHTML = level
+
+        parsedClickerIncrease *= 1.03
+        clickerIncrease.innerHTML = parsedClickerIncrease.toFixed(2)
+
+        gpc += parsedClickerIncrease
+
+        workercatCost.innerHTML = Math.floor(cost * 1.15)
+
+        updateDisplay()
+    }
+}
+
+// ===== PASSIVE CAT =====
+function buyPassiveCat() {
+    let cost = parseFloat(passiveCatCost.innerHTML)
+
+    if (parsedCats >= cost) {
+        parsedCats -= cost
+
+        let level = parseFloat(passiveLevel.innerHTML) + 1
+        passiveLevel.innerHTML = level
+
+        parsedPassiveIncrease *= 1.05
+        passiveIncrease.innerHTML = parsedPassiveIncrease.toFixed(2)
+
+        cps += parsedPassiveIncrease
+
+        passiveCatCost.innerHTML = Math.floor(cost * 1.2)
+
+        updateDisplay()
+    }
+}
+
+// ===== MOUSE HUNTER =====
 function buyMouseHunter() {
     if (parsedCats >= mouseCost) {
-
         parsedCats -= mouseCost
-        Cats.innerHTML = Math.round(parsedCats)
 
         mouseLevel++
         mouseLevelEl.innerHTML = mouseLevel
 
-        mouseChance += 0.1 // +10% per level
+        mouseChance += 0.1
 
         mouseCost *= 1.4
         mouseCostEl.innerHTML = Math.round(mouseCost)
+
+        updateDisplay()
     }
 }
 
-function spawnFlyingCat() {
-    const cat = document.createElement("img")
+// ===== KING CAT =====
+function buyKingCat() {
+    if (parsedCats >= kingCost) {
+        parsedCats -= kingCost
 
-    cat.src = "motion-cat-transparent.gif"
-    cat.className = "flying-cat"
+        kingLevel++
+        kingLevelEl.innerHTML = kingLevel
 
-    document.body.appendChild(cat)
+        cps += 10
 
-    let clicked = false
+        kingCost *= 1.5
+        kingCostEl.innerHTML = Math.round(kingCost)
 
-    cat.addEventListener("click", () => {
-        if (clicked) return
-        clicked = true
+        updateDisplay()
+    }
+}
 
-        let reward = gpc * 10
+// ===== GALAXY CAT =====
+function buyGalaxyCat() {
+    if (parsedCats >= galaxyCost) {
+        parsedCats -= galaxyCost
 
-        parsedCats += reward
-        Cats.innerHTML = Math.round(parsedCats)
+        galaxyLevel++
+        galaxyLevelEl.innerHTML = galaxyLevel
 
-        createFloatingNumber(reward, cat, false)
+        cps += 50
 
-        cat.remove()
-    })
+        galaxyCost *= 1.6
+        galaxyCostEl.innerHTML = Math.round(galaxyCost)
+
+        updateDisplay()
+    }
+}
+
+// ===== PASSIVE LOOP =====
+setInterval(() => {
+    parsedCats += cps
+    updateDisplay()
+}, 1000)
+
+const music = document.getElementById("bg-music")
+
+const playlist = [
+    "Wii Shop Channel Main Theme (HQ) - Rhythm Root.mp3",
+    "Big Brain Academy - Registration - LILjohno.mp3"
+]
+
+let currentTrack = 0
+
+function playMusic(index) {
+    music.src = playlist[index]
+    music.play()
+}
+
+
+function startGoldenCatEvent() {
+    let spawnDelay = Math.random() * 60000 + 30000; // 30–90 seconds
 
     setTimeout(() => {
-        cat.remove()
-    }, 2000)
+        spawnGoldenCat();
+        startGoldenCatEvent(); // loop forever
+    }, spawnDelay);
 }
 
-setInterval(() => {
-    if (eventActive) {
-        spawnFlyingCat()
+function spawnGoldenCat() {
+    const cat = document.createElement("img");
+    cat.src = "golden-cat.png"; // your image
+    cat.classList.add("golden-cat");
+
+    document.body.appendChild(cat);
+
+    // random vertical position
+    cat.style.top = Math.random() * (window.innerHeight - 100) + "px";
+
+    let position = -150;
+    cat.style.left = position + "px";
+
+    let speed = 5 + Math.random() * 5;
+
+    let move = setInterval(() => {
+        position += speed;
+        cat.style.left = position + "px";
+
+        if (position > window.innerWidth) {
+            cat.remove();
+            clearInterval(move);
+        }
+    }, 16);
+
+    // click reward
+    cat.onclick = () => {
+        parsedCats += 500; // reward
+        Cats.innerHTML = parsedCats;
+
+        cat.remove();
+        clearInterval(move);
+    };
+}
+
+
+
+// when song ends → next song
+music.addEventListener("ended", () => {
+    currentTrack++
+
+    if (currentTrack >= playlist.length) {
+        currentTrack = 0
     }
-}, 1500)
+
+    playMusic(currentTrack)
+})
+
+// start on first click (important)
+document.body.addEventListener("click", () => {
+    playMusic(currentTrack)
+}, { once: true })
+
+music.volume = 0.3
+
