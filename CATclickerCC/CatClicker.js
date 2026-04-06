@@ -228,9 +228,9 @@ const music = document.getElementById("bg-music")
 
 const playlist = [
     "Wii Shop Channel Main Theme (HQ) - Rhythm Root.mp3",
-    "Big Brain Academy - Registration - LILjohno.mp3"
+    "Big Brain Academy - Registration - LILjohno.mp3",
+    "Donkey Kong Country .mp3"
 ]
-
 let currentTrack = -1
 
 function playRandomMusic() {
@@ -256,7 +256,7 @@ document.body.addEventListener("click", () => {
     playRandomMusic()
 }, { once: true })
 
-music.volume = 0.3
+music.volume = 0.2
 
 
 // ===== GOLDEN CAT SPAWN =====
